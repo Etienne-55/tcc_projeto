@@ -6,7 +6,7 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: password123
     ports:
-      - "5432:5432"
+      - "55432:5432" 
     volumes:
       - postgres_data:/var/lib/postgresql/data
       - ./init.sql:/docker-entrypoint-initdb.d/init.sql
@@ -28,7 +28,8 @@ services:
         condition: service_healthy
     environment:
       - DATABASE_URL=postgres://postgres:password123@postgres:5432/golang_crud?sslmode=disable
-      - OLLAMA_URL=http://localhost:11434 # Primary URL
+      - OLLAMA_URL=http://host.docker.internal:11434
+      - DOCKER_CONTAINER=true
       - GIN_MODE=debug
       - LOG_LEVEL=debug
     networks:

@@ -3,7 +3,6 @@ package handlers
 import (
 	"bytes"
 	"database/sql"
-	"fmt"
 	"golang_crud/models"
 	"golang_crud/services"
 	"io"
@@ -21,18 +20,18 @@ func CreateDocument(db *sql.DB) gin.HandlerFunc {
 
         // Debug: Print raw body
         body, _ := c.GetRawData()
-        fmt.Printf("Raw body: %s\n", string(body))
+        log.Printf("Raw body: %s\n", string(body))
 
         // Reset body for binding
         c.Request.Body = io.NopCloser(bytes.NewBuffer(body))
 
         if err := c.ShouldBindJSON(&doc); err != nil {
-            fmt.Printf("Binding error: %v\n", err)
+            log.Printf("Binding error: %v\n", err)
             c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
             return
         }
 
-        fmt.Printf("Parsed document: %+v\n", doc)
+        log.Printf("Parsed document: %+v\n", doc)
 
         if err := services.CreateDocument(db, &doc); err != nil {
             c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to create document"})
